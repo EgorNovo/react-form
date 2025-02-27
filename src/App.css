@@ -40,3 +40,13 @@
 .read-the-docs {
   color: #888;
 }
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+textarea {
+  resize: none;
+}

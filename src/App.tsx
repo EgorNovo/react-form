@@ -1,35 +1,45 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { SubmitHandler, useForm } from "react-hook-form";
+import "./App.css";
+
+interface IForm {
+  email: string,
+  message: string,
+}
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { register, handleSubmit, formState } = useForm<IForm>({
+    mode: 'onChange',
+  });
+
+  const onSubmit:SubmitHandler<IForm> = data => {
+    console.log(data)
+  }
+
+  const emailError = formState.errors.email?.message
 
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <h1>Feedback form</h1>
+      <form className="form" action="submit" onSubmit={handleSubmit(onSubmit)}>
+        <input
+          type="text"
+          placeholder="Enter Email..."
+          {...register("email", {
+            required: "This field is required",
+            pattern: {
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+              message: 'Invalid email address'
+            }
+          })
+        }
+        />
+        {emailError && <p>{emailError}</p>}
+
+        <textarea placeholder="Some text..." />
+        <button type="submit">Send</button>
+      </form>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
